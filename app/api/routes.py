@@ -3,9 +3,23 @@ from app.extensions import db
 from app.models import Job
 from app.api.validators import validate_hostname, validate_playbook, ValidationError
 from app.api.ansible_runner import AnsibleRunner
-from app.tasks import run_playbook_async
 
 api = Blueprint('api', __name__, url_prefix='/api')
+
+@api.route('/', methods=['GET'])
+def api_info():
+    return jsonify({
+        'service': 'Ansible Web API',
+        'version': '1.0.0',
+        'endpoints': {
+            'health': '/api/health',
+            'playbooks': '/api/playbooks',
+            'execute': '/api/execute (POST)',
+            'jobs': '/api/jobs',
+            'job_status': '/api/jobs/<job_id>',
+            'job_logs': '/api/jobs/<job_id>/logs'
+        }
+    }), 200
 
 @api.route('/health', methods=['GET'])
 def health_check():
@@ -46,6 +60,7 @@ def execute_playbook():
     current_app.logger.info(f"Created job {job.id}: {playbook_name} -> {target_host}")
 
     # Use Celery for async execution
+    from app.tasks import run_playbook_async
     run_playbook_async.apply_async(args=(playbook_name, target_host, job.id))
 
     return jsonify({
