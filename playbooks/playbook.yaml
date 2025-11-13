@@ -1,0 +1,16 @@
+---
+- name: Install packages
+  hosts: all
+  become: false
+  gather_facts: false
+  vars:
+    packages:
+      - git
+      - zoom
+      - notepadplusplus
+      - zoom-outlook
+  tasks:
+    - name: Install packages via Chocolatey
+      chocolatey.chocolatey.win_chocolatey:
+        name: "{{ packages }}"
+        state: present
