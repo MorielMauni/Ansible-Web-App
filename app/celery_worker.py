@@ -15,3 +15,6 @@ def make_celery(app):
                 return super().__call__(*args, **kwargs)
     celery.Task = ContextTask
     return celery
+
+# Import tasks to register them with Celery
+import app.tasks

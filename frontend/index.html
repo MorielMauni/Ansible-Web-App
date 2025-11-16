@@ -2,39 +2,76 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Ansible Job Runner</title>
+  <title>Ansible Web API</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-  <h1>Ansible Job Runner</h1>
-  <div class="job-form">
-    <label for="playbook">Playbook:</label>
-    <select id="playbook"></select>
-    <label for="hostname">Hostname:</label>
-    <input type="text" id="hostname" placeholder="target-host">
-    <button id="runButton">Run Playbook</button>
-  </div>
-  <h2>Recent Jobs</h2>
-  <table id="jobsTable">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Playbook</th>
-        <th>Host</th>
-        <th>Status</th>
-        <th>Started</th>
-        <th>Completed</th>
-        <th>Details</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-  <div id="logModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <pre id="modalLogs"></pre>
+  <div class="container">
+    <header>
+      <h1><i class="fas fa-cogs"></i> Ansible Web API</h1>
+      <p>Execute Ansible playbooks remotely</p>
+    </header>
+
+    <main>
+      <section class="playbooks-section">
+        <div class="section-header">
+          <h2><i class="fas fa-book"></i> Available Playbooks</h2>
+          <button id="refreshPlaybooks" class="btn btn-secondary">
+            <i class="fas fa-sync-alt"></i> Refresh
+          </button>
+        </div>
+        <div id="playbooksContainer" class="playbooks-grid">
+          <div class="loading">
+            <i class="fas fa-spinner fa-spin"></i> Loading playbooks...
+          </div>
+        </div>
+      </section>
+
+      <section class="jobs-section">
+        <div class="section-header">
+          <h2><i class="fas fa-history"></i> Recent Jobs</h2>
+          <button id="refreshJobs" class="btn btn-secondary">
+            <i class="fas fa-sync-alt"></i> Refresh
+          </button>
+        </div>
+        <div id="jobsContainer" class="jobs-list">
+          <div class="loading">
+            <i class="fas fa-spinner fa-spin"></i> Loading jobs...
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Run Playbook Modal -->
+    <div id="runModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-play"></i> Run Playbook</h3>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div id="runModalContent">
+            <p>Preparing to run playbook...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logs Modal -->
+    <div id="logModal" class="modal">
+      <div class="modal-content large">
+        <div class="modal-header">
+          <h3><i class="fas fa-file-alt"></i> Job Logs</h3>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+          <pre id="modalLogs"></pre>
+        </div>
+      </div>
     </div>
   </div>
+
   <script src="app.js"></script>
 </body>
 </html>
